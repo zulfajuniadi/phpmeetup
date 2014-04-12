@@ -36,7 +36,7 @@
     <h1>
       {{ $project->name }}
       <div class="pull-right">
-        <button class="btn btn-lg">Delete</button>
+        <a href="{{action('ProjectsController@getDelete', $project->id)}}" class="btn btn-lg">Delete</a>
         <button class="btn btn-lg" id="renameProject">Edit</button>
         <a href="/" class="btn btn-lg">Back</a>
       </div>

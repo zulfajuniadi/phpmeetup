@@ -23,4 +23,16 @@ class ProjectsController extends BaseController
 
     return $project;
   }
+
+
+  public function getDelete($projectId)
+  {
+    $project = Project::find($projectId);
+    $project->delete();
+
+    return Redirect::to('/');
+  }
+
+
+
 }
