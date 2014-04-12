@@ -114,9 +114,16 @@
 @stop
 @section('scripts')
   $('.editTask').click(function(){
-    bootbox.prompt('Rename "Some work done"', function(){});
+    bootbox.prompt('Rename "Some work done"', function(taskName){
+    });
   });
   $('#renameProject').click(function(){
-    bootbox.prompt('Rename "Project A"', function(){});
+    bootbox.prompt('Rename "{{$project->name}}"', function(projectName){
+      $.post('/projects/update/{{$project->id}}', {
+        'projectName' : projectName
+      }, function(){
+        window.location.reload(true);
+      })
+    });
   });
 @stop

@@ -34,5 +34,17 @@ class ProjectsController extends BaseController
   }
 
 
+  public function postUpdate($projectId)
+  {
+    $values = Input::all();
+
+    $project = Project::find($projectId);
+    $project->name = $values['projectName'];
+    $project->save();
+
+    return $project;
+  }
+
+
 
 }
