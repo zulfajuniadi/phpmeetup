@@ -36,4 +36,14 @@ class TasksController extends BaseController
     return Redirect::back();
   }
 
+  public function postUpdate($id)
+  {
+    $task = Task::find($id);
+    if($task) {
+      $task->title = Input::get('title');
+      $task->save();
+    }
+    return $task;
+  }
+
 }

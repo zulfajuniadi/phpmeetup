@@ -54,9 +54,15 @@
     <h1>
       {{ $project->name }}
       <div class="pull-right">
-        <a href="{{action('ProjectsController@getDelete', $project->id)}}" class="btn btn-lg" id="deleteProject">Delete</a>
-        <button class="btn btn-lg" id="renameProject">Edit</button>
-        <a href="/" class="btn btn-lg">Home</a>
+        <a href="/" class="btn btn-lg btn-success">
+          <span class="glyphicon glyphicon-home"></span>
+        </a>
+        <a href="{{action('ProjectsController@getDelete', $project->id)}}" class="btn btn-lg btn-danger" id="deleteProject">
+          <span class="glyphicon glyphicon-trash"></span>
+        </a>
+        <button class="btn btn-lg" id="renameProject">
+          <span class="glyphicon glyphicon-pencil"></span>
+        </button>
       </div>
     </h1>
     <hr>
@@ -92,10 +98,10 @@
                   <span class="glyphicon glyphicon-stop"></span>
                 </a>
               @else
-                <a class="btn btn-danger" href="{{action('TasksController@getDelete', $task->id)}}">
+                <a class="btn btn-danger deleteTask" href="{{action('TasksController@getDelete', $task->id)}}" data-title="{{$task->title}}">
                   <span class="glyphicon glyphicon-trash"></span>
                 </a>
-                <button class="btn btn-info editTask">
+                <button class="btn btn-info editTask" data-id="{{$task->id}}" data-title="{{$task->title}}">
                   <span class="glyphicon glyphicon-pencil"></span>
                 </button>
               @endif
@@ -123,10 +129,29 @@
       return false;
     }
   });
+
+  $('.deleteTask').click(function(e){
+    var title = $(this).data('title');
+    if (!confirm('Are you sure you want to delete "' + title + '"?')) {
+      e.preventDefault();
+      return false;
+    }
+  });
+
   $('.editTask').click(function(){
-    bootbox.prompt('Rename "Some work done"', function(taskName){
+    var taskId = $(this).data('id');
+    var oldTitle = $(this).data('title');
+    bootbox.prompt('Rename "' + oldTitle + '"', function(title){
+      if(title) {
+        $.post('/tasks/update/' + taskId, {
+          'title' : title
+        }, function(){
+          window.location.reload(true);
+        });
+      }
     });
   });
+
   $('#renameProject').click(function(){
     bootbox.prompt('Rename "{{$project->name}}"', function(projectName){
       if(projectName) {
