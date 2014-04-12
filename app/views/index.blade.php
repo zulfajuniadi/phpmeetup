@@ -136,7 +136,7 @@
       </div> -->
       @foreach($projects as $project)
         <div class="col-md-3 @if($project->is_running) isRunning @endif">
-          <a href="{{action('ProjectsController@getIndex')}}">
+          <a href="{{action('ProjectsController@getIndex', $project->id)}}">
             <h3>
               {{ $project->name }}
               <br>

@@ -34,7 +34,7 @@
 @section('content')
   <div class="container">
     <h1>
-      Project A
+      {{ $project->name }}
       <div class="pull-right">
         <button class="btn btn-lg">Delete</button>
         <button class="btn btn-lg" id="renameProject">Edit</button>

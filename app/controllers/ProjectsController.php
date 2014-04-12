@@ -2,9 +2,11 @@
 
 class ProjectsController extends BaseController
 {
-  public function getIndex()
+  public function getIndex($projectId)
   {
-    return View::make('project');
+    $project = Project::find($projectId);
+    return View::make('project')
+      -> with('project', $project);
   }
 
 
