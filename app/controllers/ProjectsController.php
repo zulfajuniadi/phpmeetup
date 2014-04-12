@@ -41,8 +41,13 @@ class ProjectsController extends BaseController
 
   public function postNewTask()
   {
+    $values = Input::all();
+    $task = new Task;
+    $task->title = $values['title'];
+    $task->project_id = $values['project_id'];
+    $task->start = time();
+    $task->save();
 
+    return Redirect::back();
   }
-
-
 }
