@@ -16,15 +16,21 @@
     color: #333;
   }
 
-  h1 a.btn.btn-lg {
-    vertical-align: bottom;
-  }
   table.table-lg thead tr th, table.table-lg tbody tr td, table.table-lg tfoot tr td {
     font-size: 18px;
     padding: 14px;
   }
   .text-small {
     font-size: smaller;
+  }
+
+  button.btn.btn-lg.btn-success {
+    vertical-align: top;
+  }
+
+  input[name=title] {
+    vertical-align: top;
+    border: 1px solid #AAB2BD;
   }
 
   .pulse {
