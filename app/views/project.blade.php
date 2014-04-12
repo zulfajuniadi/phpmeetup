@@ -1,6 +1,21 @@
 @extends('layout')
 
 @section('styles')
+  form.btn {
+    padding: 6px 6px;
+    border-radius: 10px;
+    margin-bottom: 12px;
+  }
+
+  form.btn:hover {
+    background-color:#AAB2BD;
+    border-color:#AAB2BD;
+  }
+
+  form input {
+    color: #333;
+  }
+
   h1 a.btn.btn-lg {
     vertical-align: bottom;
   }
@@ -36,9 +51,9 @@
     <h1>
       {{ $project->name }}
       <div class="pull-right">
-        <a href="{{action('ProjectsController@getDelete', $project->id)}}" class="btn btn-lg">Delete</a>
+        <a href="{{action('ProjectsController@getDelete', $project->id)}}" class="btn btn-lg" id="deleteProject">Delete</a>
         <button class="btn btn-lg" id="renameProject">Edit</button>
-        <a href="/" class="btn btn-lg">Back</a>
+        <a href="/" class="btn btn-lg">Home</a>
       </div>
     </h1>
     <hr>
@@ -46,6 +61,14 @@
       <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
       <strong>Heads up!</strong> This alert needs your attention, but it's not super important.
     </div>
+
+    <form method="post" action="{{action('TasksController@postNew', $project->id)}}" class="pull-right btn">
+      <input name="title" type="text" class="input-lg" placeholder="Task">
+      <button class="btn btn-lg btn-success">Start</button>
+    </form>
+
+    <div class="clearfix"></div>
+
     <table class="table table-lg table-bordered table-hover">
       <thead>
         <tr>
@@ -56,7 +79,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
+        <!-- <tr>
           <td>
             12 Jan 2014
             <div class="text-small text-muted">12:00:12 - 23:00:12</div>
@@ -100,12 +123,36 @@
               <span class="glyphicon glyphicon-stop"></span>
             </button>
           </td>
-        </tr>
+        </tr> -->
+        @foreach($project->tasks as $task)
+          <tr>
+            <td>
+              12 Jan 2014
+              <div class="text-small text-muted">{{ $task->timeDurationString() }}</div>
+            </td>
+            <td>{{ $task->title }}</td>
+            <td>{{ $task->taskDuration() }}</td>
+            <td>
+              @if($task->isRunning())
+                <a href="{{action('TasksController@getDone', $task->id)}}" class="btn btn-warning pulse">
+                  <span class="glyphicon glyphicon-stop"></span>
+                </a>
+              @else
+                <a class="btn btn-danger" href="{{action('TasksController@getDelete', $task->id)}}">
+                  <span class="glyphicon glyphicon-trash"></span>
+                </a>
+                <button class="btn btn-info editTask">
+                  <span class="glyphicon glyphicon-pencil"></span>
+                </button>
+              @endif
+            </td>
+          </tr>
+        @endforeach
       </tbody>
       <tfoot>
         <tr>
           <td colspan="2"> </td>
-          <td><b>12:34:12</b></td>
+          <td><b>{{ $project->durationSum() }}</b></td>
           <td> </td>
         </tr>
       </tfoot>
@@ -113,17 +160,25 @@
   </div>
 @stop
 @section('scripts')
+  $('#deleteProject').click(function(e){
+    if (!confirm('Are you sure you want to delete "{{$project->name}}"?')) {
+      e.preventDefault();
+      return false;
+    }
+  });
   $('.editTask').click(function(){
     bootbox.prompt('Rename "Some work done"', function(taskName){
     });
   });
   $('#renameProject').click(function(){
     bootbox.prompt('Rename "{{$project->name}}"', function(projectName){
-      $.post('/projects/update/{{$project->id}}', {
-        'projectName' : projectName
-      }, function(){
-        window.location.reload(true);
-      })
+      if(projectName) {
+        $.post('/projects/update/{{$project->id}}', {
+          'projectName' : projectName
+        }, function(){
+          window.location.reload(true);
+        });
+      }
     });
   });
 @stop

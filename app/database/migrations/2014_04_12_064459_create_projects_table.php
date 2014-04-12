@@ -12,11 +12,10 @@ class CreateProjectsTable extends Migration {
 	 */
 	public function up()
 	{
+    Schema::dropIfExists('projects');
     Schema::create('projects', function($table){
       $table->increments('id');
       $table->string('name');
-      $table->integer('duration');
-      $table->boolean('is_running');
       $table->timestamps();
     });
 		//

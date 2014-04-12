@@ -11,6 +11,10 @@
     border-color:#AAB2BD;
   }
 
+  form input {
+    color: #333;
+  }
+
   h1 select.btn.btn-success {
     -webkit-appearance: listbox;
     font-size: 17px;
@@ -78,17 +82,17 @@
   <div class="container">
     <h1>
       Time Tracker
-      <form action="" class="pull-right btn">
-        <select name="" id="" class=" btn btn-success">
+      <form id="newTaskForm" action="{{action('ProjectsController@postNewTask')}}" method="post" class="pull-right btn">
+        <select name="project_id" id="project_id" class=" btn btn-success">
           <option value="">Choose A Project</option>
           @foreach($projects as $project)
-            <option value="">{{ $project->name }}</option>
+            <option value="{{$project->id}}">{{ $project->name }}</option>
           @endforeach
           <!-- <option value="">Project B</option>
           <option value="">Project C</option> -->
           <option value="newProject">New Project</option>
         </select>
-        <input type="text" class="input-lg" placeholder="Task">
+        <input name="title" id="title" type="text" class="input-lg" placeholder="Task">
         <button class="btn btn-lg btn-success">Start</button>
       </form>
     </h1>
@@ -98,49 +102,13 @@
       <strong>Heads up!</strong> This alert needs your attention, but it's not super important.
     </div>
     <div class="row projects">
-      <!-- <div class="col-md-3 isRunning">
-        <a href="/projects">
-          <h3>
-            Project A
-            <br>
-            45:12:00
-          </h3>
-        </a>
-      </div>
-      <div class="col-md-3">
-        <a href="{{action('ProjectsController@getIndex')}}">
-          <h3>
-            Project B
-            <br>
-            45:12:00
-          </h3>
-        </a>
-      </div>
-      <div class="col-md-3 isRunning">
-        <a href="{{action('ProjectsController@getIndex')}}">
-          <h3>
-            Project C
-            <br>
-            45:12:00
-          </h3>
-        </a>
-      </div> -->
-      <!-- <div class="col-md-3 isRunning">
-        <a href="{{action('ProjectsController@getIndex')}}">
-          <h3>
-            Project D
-            <br>
-            45:12:00
-          </h3>
-        </a>
-      </div> -->
       @foreach($projects as $project)
-        <div class="col-md-3 @if($project->is_running) isRunning @endif">
+        <div class="col-md-3 @if($project->isRunning()) isRunning @endif">
           <a href="{{action('ProjectsController@getIndex', $project->id)}}">
             <h3>
               {{ $project->name }}
               <br>
-              {{ $project->duration }}
+              {{ $project->durationSum() }}
             </h3>
           </a>
         </div>
@@ -149,14 +117,27 @@
   </div>
 @stop
 @section('scripts')
-  $('select').change(function(){
+
+  $('#newTaskForm').submit(function(e){
+    var projectId = $('#project_id').val();
+    if(!projectId.trim() || projectId === 'newProject' || !$('#title').trim()) {
+      e.preventDefault();
+      return false;
+    }
+  });
+
+  var select = $('select');
+  select.change(function(){
     if($(this).val() === 'newProject') {
+      select.val('');
       bootbox.prompt('New Project Name', function(projectName){
-        $.post('/projects/index', {
-          'projectName' : projectName
-        }, function(){
-          window.location.reload(true);
-        })
+        if(projectName) {
+          $.post('/projects/index', {
+            'projectName' : projectName
+          }, function(){
+            window.location.reload(true);
+          })
+        }
       });
     }
   });

@@ -14,10 +14,9 @@
 Route::get('/', function()
 {
   $projects = Project::all();
-
 	return View::make('index')
     -> with('projects', $projects);
 });
 
-Route::controller('users', 'UserController');
 Route::controller('projects', 'ProjectsController');
+Route::controller('tasks', 'TasksController');
