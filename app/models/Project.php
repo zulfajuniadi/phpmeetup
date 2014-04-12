@@ -27,4 +27,10 @@ class Project extends Eloquent
     })->count() > 0;
   }
 
+  public function delete()
+  {
+    $this->tasks()->delete();
+    return parent::delete();
+  }
+
 }

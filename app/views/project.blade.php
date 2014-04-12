@@ -46,6 +46,9 @@
     100% {-moz-transform: scale(1.2, 1.2); opacity: 0.0;}
   }
 @stop
+
+
+
 @section('content')
   <div class="container">
     <h1>
@@ -57,10 +60,6 @@
       </div>
     </h1>
     <hr>
-    <div class="alert alert-success alert-dismissable">
-      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-      <strong>Heads up!</strong> This alert needs your attention, but it's not super important.
-    </div>
 
     <form method="post" action="{{action('TasksController@postNew', $project->id)}}" class="pull-right btn">
       <input name="title" type="text" class="input-lg" placeholder="Task">
@@ -79,55 +78,10 @@
         </tr>
       </thead>
       <tbody>
-        <!-- <tr>
-          <td>
-            12 Jan 2014
-            <div class="text-small text-muted">12:00:12 - 23:00:12</div>
-          </td>
-          <td>Some work done</td>
-          <td>1:34:12</td>
-          <td>
-            <a class="btn btn-danger" href="delete.html">
-              <span class="glyphicon glyphicon-trash"></span>
-            </a>
-            <button class="btn btn-info editTask">
-              <span class="glyphicon glyphicon-pencil"></span>
-            </button>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            12 Jan 2014
-            <div class="text-small text-muted">12:00:12 - 23:00:12</div>
-          </td>
-          <td>Some work done</td>
-          <td>1:34:12</td>
-          <td>
-            <a class="btn btn-danger" href="delete.html">
-              <span class="glyphicon glyphicon-trash"></span>
-            </a>
-            <button class="btn btn-info editTask">
-              <span class="glyphicon glyphicon-pencil"></span>
-            </button>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            12 Jan 2014
-            <div class="text-small text-muted">12:00:12 - 23:00:12</div>
-          </td>
-          <td>Some work done</td>
-          <td>1:34:12</td>
-          <td>
-            <button class="btn btn-warning doneTask pulse">
-              <span class="glyphicon glyphicon-stop"></span>
-            </button>
-          </td>
-        </tr> -->
         @foreach($project->tasks as $task)
           <tr>
             <td>
-              12 Jan 2014
+              {{ date('d M Y', $task->start) }}
               <div class="text-small text-muted">{{ $task->timeDurationString() }}</div>
             </td>
             <td>{{ $task->title }}</td>
@@ -159,6 +113,9 @@
     </table>
   </div>
 @stop
+
+
+
 @section('scripts')
   $('#deleteProject').click(function(e){
     if (!confirm('Are you sure you want to delete "{{$project->name}}"?')) {

@@ -1,6 +1,31 @@
 @extends('layout')
 
 @section('styles')
+
+  div.noprojects {
+    position: absolute;
+    text-align: left;
+    min-width: 479px;
+    top: 114px;
+    right: 0;
+  }
+
+  div.container {
+      position: relative;
+  }
+
+  .noprojects img {
+      width: 90px;
+  }
+
+  .noprojects h3 {
+    position: absolute;
+    right: 27px;
+    top: 9px;
+    width: 337px;
+    text-align: left;
+  }
+
   form.btn {
     padding: 6px 6px;
     border-radius: 10px;
@@ -97,30 +122,36 @@
       </form>
     </h1>
     <hr>
-    <div class="alert alert-success alert-dismissable">
-      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-      <strong>Heads up!</strong> This alert needs your attention, but it's not super important.
-    </div>
+
     <div class="row projects">
-      @foreach($projects as $project)
-        <div class="col-md-3 @if($project->isRunning()) isRunning @endif">
-          <a href="{{action('ProjectsController@getIndex', $project->id)}}">
-            <h3>
-              {{ $project->name }}
-              <br>
-              {{ $project->durationSum() }}
-            </h3>
-          </a>
+      @if($projects->count())
+        @foreach($projects as $project)
+          <div class="col-md-3 @if($project->isRunning()) isRunning @endif">
+            <a href="{{action('ProjectsController@getIndex', $project->id)}}">
+              <h3>
+                {{ $project->name }}
+                <br>
+                {{ $project->durationSum() }}
+              </h3>
+            </a>
+          </div>
+        @endforeach
+      @else
+        <div class="noprojects">
+          <img src="/resources/arrow.png" alt="">
+          <h3>Choose "New Project" to start</h3>
         </div>
-      @endforeach
+      @endif
     </div>
   </div>
 @stop
 @section('scripts')
 
-  $('#newTaskForm').submit(function(e){
+  var form = $('#newTaskForm');
+  form.submit(function(e){
     var projectId = $('#project_id').val();
     if(!projectId.trim() || projectId === 'newProject' || !$('#title').trim()) {
+      form.get(0).reset();
       e.preventDefault();
       return false;
     }
